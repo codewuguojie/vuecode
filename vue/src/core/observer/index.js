@@ -63,6 +63,7 @@ export class Observer {
    * Walk through all properties and convert them into
    * getter/setters. This method should only be called when
    * value type is Object.
+   * 遍历所有属性并将它们转换为getter/setter。 仅当值类型为Object时才应调用此方法。
    */
   walk (obj: Object) {
     const keys = Object.keys(obj)
@@ -86,6 +87,7 @@ export class Observer {
 /**
  * Augment a target Object or Array by intercepting
  * the prototype chain using __proto__
+ * 通过使用__proto__截取原型链来增强目标对象或数组
  */
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
@@ -96,6 +98,7 @@ function protoAugment (target, src: Object) {
 /**
  * Augment a target Object or Array by defining
  * hidden properties.
+ * 通过定义隐藏属性来增强目标对象或数组
  */
 /* istanbul ignore next */
 function copyAugment (target: Object, src: Object, keys: Array<string>) {
@@ -109,7 +112,9 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
+ * 尝试为一个值创建一个观察者实例，如果成功观察，则返回新的观察者，如果值已经有一个观察者，则返回现有的观察者。
  */
+//对传进来的object的属性进行递归，将他的所有属性都转换成geter/setter的形式来侦测（也就是说，只要我们将一个object传到observer中，那么这个object就会变成可观测的、响应式的object）
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
