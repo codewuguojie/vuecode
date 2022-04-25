@@ -33,6 +33,7 @@ export function toggleObserving (value: boolean) {
  * object. Once attached, the observer converts the target
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
+ * Observer类会通过递归的方式把一个对象得所有属性都转化成可观测对象
  * Observer类，它连接到每个被观察对象。 一旦附加，观察者就会将目标对象的属性键转换为getter/setter来收集依赖关系并分派更新。
  * 观察者模式（进行依赖收集）
  */
@@ -157,6 +158,7 @@ export function defineReactive (
   }
 
   // cater for pre-defined getter/setters
+  //getter中进行依赖收集，setter中进行以来更新
   const getter = property && property.get
   const setter = property && property.set
   if ((!getter || setter) && arguments.length === 2) {

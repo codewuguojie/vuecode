@@ -9,6 +9,7 @@ let uid = 0
 /**
  * A dep is an observable that can have multiple
  * directives subscribing to it.
+ * dep是一个可观察对象，可以有多个指令订阅它。 Dep是一个依赖管理器，把数据的所有依赖都管理起来，
  */
 export default class Dep {
   static target: ?Watcher;
@@ -17,24 +18,24 @@ export default class Dep {
 
   constructor () {
     this.id = uid++
-    this.subs = []
+    this.subs = []//初始化一个subs数据，存放依赖
   }
 
   addSub (sub: Watcher) {
     this.subs.push(sub)
   }
 
-  removeSub (sub: Watcher) {
+  removeSub (sub: Watcher) {//删除一个依赖
     remove(this.subs, sub)
   }
 
-  depend () {
+  depend () {//添加一个依赖
     if (Dep.target) {
       Dep.target.addDep(this)
     }
   }
 
-  notify () {
+  notify () {//通知所有依赖更新
     // stabilize the subscriber list first
     const subs = this.subs.slice()
     if (process.env.NODE_ENV !== 'production' && !config.async) {

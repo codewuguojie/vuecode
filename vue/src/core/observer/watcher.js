@@ -23,6 +23,8 @@ let uid = 0
  * A watcher parses an expression, collects dependencies,
  * and fires callback when the expression value changes.
  * This is used for both the $watch() api and directives.
+ * 监视器解析表达式，收集依赖项，并在表达式值更改时触发回调。 这用于$watch() api和指令。
+ * 发布者模式
  */
 export default class Watcher {
   vm: Component;
@@ -57,7 +59,7 @@ export default class Watcher {
     vm._watchers.push(this)
     // options
     if (options) {
-      this.deep = !!options.deep
+      this.deep = !!options.deep//等同于 this.deep = options.deep||false(!!的解释)
       this.user = !!options.user
       this.lazy = !!options.lazy
       this.sync = !!options.sync
@@ -76,7 +78,7 @@ export default class Watcher {
     this.expression = process.env.NODE_ENV !== 'production'
       ? expOrFn.toString()
       : ''
-    // parse expression for getter
+    // parse expression for getter   解析getter表达式
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
@@ -98,6 +100,7 @@ export default class Watcher {
 
   /**
    * Evaluate the getter, and re-collect dependencies.
+   * 求值getter，并重新收集依赖项。
    */
   get () {
     pushTarget(this)
@@ -125,6 +128,7 @@ export default class Watcher {
 
   /**
    * Add a dependency to this directive.
+   * 给指令添加依赖项
    */
   addDep (dep: Dep) {
     const id = dep.id
@@ -139,6 +143,7 @@ export default class Watcher {
 
   /**
    * Clean up for dependency collection.
+   * 清理依赖项收集
    */
   cleanupDeps () {
     let i = this.deps.length
@@ -159,8 +164,8 @@ export default class Watcher {
   }
 
   /**
-   * Subscriber interface.
-   * Will be called when a dependency changes.
+   * Subscriber interface will be called when a dependency changes.
+   * 订阅服务器接口将在依赖项变化时调用
    */
   update () {
     /* istanbul ignore else */
@@ -174,8 +179,8 @@ export default class Watcher {
   }
 
   /**
-   * Scheduler job interface.
-   * Will be called by the scheduler.
+   * Scheduler job interface will be called by the scheduler.
+   * 调度器作业接口将由调度器调用
    */
   run () {
     if (this.active) {
