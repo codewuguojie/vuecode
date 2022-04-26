@@ -47,6 +47,7 @@ function pruneCacheEntry (
   current?: VNode
 ) {
   const entry: ?CacheEntry = cache[key]
+  /* 判断当前没有处于被渲染状态的组件，将其销毁*/
   if (entry && (!current || entry.tag !== current.tag)) {
     entry.componentInstance.$destroy()
   }
@@ -112,13 +113,17 @@ export default {
   },
 
   render () {
+    /* 获取默认插槽中的第一个组件节点 */
     const slot = this.$slots.default
     const vnode: VNode = getFirstComponentChild(slot)
+    /* 获取该组件节点的componentOptions */
     const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions
     if (componentOptions) {
       // check pattern
+      /* 获取该组件节点的名称，优先获取组件的name字段，如果name不存在则获取组件的tag */
       const name: ?string = getComponentName(componentOptions)
       const { include, exclude } = this
+      /* 如果name不在inlcude中或者存在于exlude中则表示不缓存，直接返回vnode */
       if (
         // not included
         (include && (!name || !matches(include, name))) ||

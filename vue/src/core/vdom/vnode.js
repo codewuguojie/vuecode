@@ -39,26 +39,26 @@ export default class VNode {
     componentOptions?: VNodeComponentOptions,
     asyncFactory?: Function
   ) {
-    this.tag = tag
-    this.data = data
-    this.children = children
-    this.text = text
-    this.elm = elm
-    this.ns = undefined
-    this.context = context
-    this.fnContext = undefined
+    this.tag = tag//当前节点的标签名
+    this.data = data//当前节点对应的对象（数据），包含了一些具体的数据信息，是一个VNodeData类型，可以参考VNodeData类型中的数据信息
+    this.children = children//当前节点的子节点
+    this.text = text//当前节点的文本
+    this.elm = elm//当前虚拟节点对应的真实Dom元素
+    this.ns = undefined//当前节点的名字空间
+    this.context = context//当前组件节点对应的Vue实例
+    this.fnContext = undefined//函数式组件对应的Vue实例
     this.fnOptions = undefined
     this.fnScopeId = undefined
-    this.key = data && data.key
-    this.componentOptions = componentOptions
-    this.componentInstance = undefined
-    this.parent = undefined
-    this.raw = false
-    this.isStatic = false
-    this.isRootInsert = true
-    this.isComment = false
-    this.isCloned = false
-    this.isOnce = false
+    this.key = data && data.key//节点的key属性，被当做节点的标志，用以优化
+    this.componentOptions = componentOptions//组件的option选项
+    this.componentInstance = undefined//当前节点对应的组件实例
+    this.parent = undefined//当前节点的父节点
+    this.raw = false//是否为原生html或者只是普通文本，innerHTML的时候为true，textContent的时候为false
+    this.isStatic = false//静态节点标志
+    this.isRootInsert = true//是否作为根节点插入
+    this.isComment = false//是否为注释节点
+    this.isCloned = false//是否为克隆节点
+    this.isOnce = false//是否有v-once指令
     this.asyncFactory = asyncFactory
     this.asyncMeta = undefined
     this.isAsyncPlaceholder = false
@@ -70,6 +70,15 @@ export default class VNode {
     return this.componentInstance
   }
 }
+
+//VNode类可以描述出的真实DOM节点类型有：
+// 注释节点
+// 文本节点
+// 元素节点
+// 组件节点
+// 函数式组件节点
+// 克隆节点
+
 
 export const createEmptyVNode = (text: string = '') => {
   const node = new VNode()

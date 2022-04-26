@@ -75,6 +75,7 @@ export class Observer {
 
   /**
    * Observe a list of Array items.
+   * 深度侦测——不但要侦测数据本身的变化，还要侦测其所有子数据的变化（数组）
    */
   observeArray (items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
@@ -113,7 +114,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
- * 尝试为一个值创建一个观察者实例，如果成功观察，则返回新的观察者，如果值已经有一个观察者，则返回现有的观察者。
+ * 尝试为一个值创建一个observer实例，如果创建成功，则返回新的observer实例，如果value已经有一个observer，则直接返回已有的observer。
  */
 //对传进来的object的属性进行递归，将他的所有属性都转换成geter/setter的形式来侦测（也就是说，只要我们将一个object传到observer中，那么这个object就会变成可观测的、响应式的object）
 export function observe (value: any, asRootData: ?boolean): Observer | void {
@@ -209,6 +210,7 @@ export function defineReactive (
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
  * already exist.
+ * 设置对象的属性。 添加新属性并在属性不存在时触发更改通知。
  */
 export function set (target: Array<any> | Object, key: any, val: any): any {
   if (process.env.NODE_ENV !== 'production' &&
@@ -276,6 +278,7 @@ export function del (target: Array<any> | Object, key: any) {
 /**
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
+ * 当数组被触摸时，收集对数组元素的依赖关系，因为我们不能像属性getter那样拦截数组元素访问。
  */
 function dependArray (value: Array<any>) {
   for (let e, i = 0, l = value.length; i < l; i++) {

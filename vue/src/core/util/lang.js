@@ -17,6 +17,7 @@ export function isReserved (str: string): boolean {
 
 /**
  * Define a property.
+ * 通过object.defineProperty逐个对数组方法进行封装
  */
 export function def (obj: Object, key: string, val: any, enumerable?: boolean) {
   Object.defineProperty(obj, key, {

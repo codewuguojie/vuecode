@@ -6,20 +6,23 @@
 import { def } from '../util/index'
 
 const arrayProto = Array.prototype
+//创建一个对象作为拦截器
 export const arrayMethods = Object.create(arrayProto)
 
+//改变数组自身的7个方法
 const methodsToPatch = [
-  'push',
-  'pop',
-  'shift',
-  'unshift',
-  'splice',
-  'sort',
-  'reverse'
+  'push',//后增
+  'pop',//后删
+  'shift',//前删
+  'unshift',//前增
+  'splice',//截取
+  'sort',//排序
+  'reverse'//倒序
 ]
 
 /**
  * Intercept mutating methods and emit events
+ * 拦截变化的方法并发出事件
  */
 methodsToPatch.forEach(function (method) {
   // cache original method
