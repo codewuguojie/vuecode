@@ -47,7 +47,7 @@ function pruneCacheEntry (
   current?: VNode
 ) {
   const entry: ?CacheEntry = cache[key]
-  /* 判断当前没有处于被渲染状态的组件，将其销毁*/
+  /* 判断被缓存的并且当前没有处于被渲染状态的组件，将其销毁（从this.cache中剔除）*/
   if (entry && (!current || entry.tag !== current.tag)) {
     entry.componentInstance.$destroy()
   }
@@ -62,9 +62,9 @@ export default {
   abstract: true,
 
   props: {
-    include: patternTypes,
-    exclude: patternTypes,
-    max: [String, Number]
+    include: patternTypes,//匹配到的组件会被缓存
+    exclude: patternTypes,//匹配到的组件不会被缓存
+    max: [String, Number]//可以缓存的最大组件数
   },
 
   methods: {
@@ -79,7 +79,10 @@ export default {
         }
         keys.push(keyToCache)
         // prune oldest entry
-        if (this.max && keys.length > parseInt(this.max)) {
+        //如果配置了max并且缓存的长度超过了this.max，则从缓存中删除第一个
+        if (this.max && keys.length
+
+            > parseInt(this.max)) {
           pruneCacheEntry(cache, keys[0], keys, this._vnode)
         }
         this.vnodeToCache = null
@@ -133,18 +136,20 @@ export default {
         return vnode
       }
 
-      const { cache, keys } = this
+      const { cache, keys } = this//获取组件的key
       const key: ?string = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? `::${componentOptions.tag}` : '')
         : vnode.key
+      //如果命中缓存，则直接从缓存中拿VNode的组件实例
       if (cache[key]) {
         vnode.componentInstance = cache[key].componentInstance
         // make current key freshest
+        //调整该组件的key的顺序，将其从原来的地方删除并重新当在最后一个
         remove(keys, key)
         keys.push(key)
-      } else {
+      } else {//如果没有命中缓存，则将其设置进缓存
         // delay setting the cache until update
         this.vnodeToCache = vnode
         this.keyToCache = key

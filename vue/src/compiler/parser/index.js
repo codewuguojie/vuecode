@@ -1,9 +1,10 @@
 /* @flow */
+/*编译的第一个阶段：模板解析阶段*/
 
 import he from 'he'
-import { parseHTML } from './html-parser'
-import { parseText } from './text-parser'
-import { parseFilters } from './filter-parser'
+import { parseHTML } from './html-parser'//HTML解析器
+import { parseText } from './text-parser'//文本解析器
+import { parseFilters } from './filter-parser'//过滤器解析器
 import { genAssignmentCode } from '../directives/model'
 import { extend, cached, no, camelize, hyphenate } from 'shared/util'
 import { isIE, isEdge, isServerRendering } from 'core/util/env'
@@ -75,6 +76,7 @@ export function createASTElement (
 
 /**
  * Convert HTML string to AST.
+ * 将HTML模板字符串转化为AST
  */
 export function parse (
   template: string,
@@ -214,6 +216,8 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    //当解析到开始标签时，调用该函数
+    //接收的参数为标签、标签属性、是否为自闭合
     start (tag, attrs, unary, start, end) {
       // check namespace.
       // inherit parent ns if there is one
@@ -300,7 +304,7 @@ export function parse (
         closeElement(element)
       }
     },
-
+    //当解析到结束标签时，调用该函数
     end (tag, start, end) {
       const element = stack[stack.length - 1]
       // pop stack
@@ -311,7 +315,8 @@ export function parse (
       }
       closeElement(element)
     },
-
+    //当解析到文本时，调用该方法
+    //当解析到标签的文本时，触发chars钩子函数，在该钩子函数内部，首先会判断文本是不是一个带变量的动态文本，如“hello ”。如果是动态文本，则创建动态文本类型的AST节点；如果不是动态文本，则创建纯静态文本类型的AST节点
     chars (text: string, start: number, end: number) {
       if (!currentParent) {
         if (process.env.NODE_ENV !== 'production') {
@@ -383,6 +388,7 @@ export function parse (
         }
       }
     },
+    //当解析到注释时。调用该函数
     comment (text: string, start, end) {
       // adding anything as a sibling to the root node is forbidden
       // comments should still be allowed, but ignored

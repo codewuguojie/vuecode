@@ -65,23 +65,31 @@ export function parseHTML (html, options) {
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
         // Comment:
+        // 若为注释，则继续查找是否存在'-->'
         if (comment.test(html)) {
           const commentEnd = html.indexOf('-->')
 
           if (commentEnd >= 0) {
+            // 若存在 '-->',继续判断options中是否保留注释
             if (options.shouldKeepComment) {
+              // 若保留注释，则把注释截取出来传给options.comment，创建注释类型的AST节点
               options.comment(html.substring(4, commentEnd), index, index + commentEnd + 3)
             }
-            advance(commentEnd + 3)
+            // 若不保留注释，则将游标移动到'-->'之后，继续向后解析
+            advance(commentEnd + 3)//移动解析的游标，解析完一部分就把游标向后移动一部分
             continue
           }
         }
 
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+        // 解析是否是条件注释
         if (conditionalComment.test(html)) {
+          // 若为条件注释，则继续查找是否存在']>'
           const conditionalEnd = html.indexOf(']>')
 
           if (conditionalEnd >= 0) {
+            // 若存在 ']>',则从原本的html字符串中把条件注释截掉，
+            // 把剩下的内容重新赋给html，继续向后匹配
             advance(conditionalEnd + 2)
             continue
           }
@@ -194,12 +202,27 @@ export function parseHTML (html, options) {
       }
       advance(start[0].length)
       let end, attr
+      /**
+       * <div a=1 b=2 c=3></div>
+       * 从<div之后到开始标签的结束符号'>'之前，一直匹配属性attrs
+       * 所有属性匹配完之后，html字符串还剩下
+       * 自闭合标签剩下：'/>'
+       * 非自闭合标签剩下：'></div>'
+       */
       while (!(end = html.match(startTagClose)) && (attr = html.match(dynamicArgAttribute) || html.match(attribute))) {
         attr.start = index
         advance(attr[0].length)
         attr.end = index
         match.attrs.push(attr)
       }
+      /**
+       * 这里判断了该标签是否为自闭合标签
+       * 自闭合标签如:<input type='text' />
+       * 非自闭合标签如:<div></div>
+       * '></div>'.match(startTagClose) => [">", "", index: 0, input: "></div>", groups: undefined]
+       * '/><div></div>'.match(startTagClose) => ["/>", "/", index: 0, input: "/><div></div>", groups: undefined]
+       * 因此，我们可以通过end[1]是否是"/"来判断该标签是否是自闭合标签
+       */
       if (end) {
         match.unarySlash = end[1]
         advance(end[0].length)

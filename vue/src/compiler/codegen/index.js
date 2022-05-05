@@ -1,4 +1,5 @@
 /* @flow */
+/*编译的第三个阶段：代码生成阶段*/
 
 import { genHandlers } from './events'
 import baseDirectives from '../directives/index'

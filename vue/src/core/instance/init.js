@@ -49,14 +49,14 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    initLifecycle(vm)//初始化生命周期
+    initEvents(vm)//初始化事件
+    initRender(vm)//初始化渲染
+    callHook(vm, 'beforeCreate')//初始化生命周期钩子函数
+    initInjections(vm) // resolve injections before data/props   初始化injections
+    initState(vm)//初始化props,methods,data,computed,watch
+    initProvide(vm) // resolve provide after data/props   初始化provide
+    callHook(vm, 'created')//调用生命周期钩子函数
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {

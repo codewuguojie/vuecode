@@ -5,6 +5,11 @@ export const ASSET_TYPES = [
   'directive',
   'filter'
 ]
+/**
+ * 相当于 Vue.ASSET_TYPES.component = {}
+ * Vue.ASSET_TYPES.directive = {}
+ * Vue.ASSET_TYPES.filter = {}
+  */
 
 export const LIFECYCLE_HOOKS = [
   'beforeCreate',

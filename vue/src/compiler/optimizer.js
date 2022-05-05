@@ -1,4 +1,5 @@
 /* @flow */
+/*编译的第二个阶段：优化阶段*/
 
 import { makeMap, isBuiltInTag, cached, no } from 'shared/util'
 
