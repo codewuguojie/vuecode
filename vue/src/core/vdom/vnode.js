@@ -79,14 +79,14 @@ export default class VNode {
 // 函数式组件节点
 // 克隆节点
 
-
+//创建注释节点
 export const createEmptyVNode = (text: string = '') => {
   const node = new VNode()
   node.text = text
   node.isComment = true
   return node
 }
-
+//创建文本节点
 export function createTextVNode (val: string | number) {
   return new VNode(undefined, undefined, undefined, String(val))
 }
@@ -95,6 +95,8 @@ export function createTextVNode (val: string | number) {
 // used for static nodes and slot nodes because they may be reused across
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
+//创建一个克隆节点
+//克隆节点就是把一个已经存在的节点复制一份出来，它主要是为了做模板编译优化时使用
 export function cloneVNode (vnode: VNode): VNode {
   const cloned = new VNode(
     vnode.tag,

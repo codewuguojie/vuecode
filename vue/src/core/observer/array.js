@@ -34,13 +34,13 @@ methodsToPatch.forEach(function (method) {
     switch (method) {
       case 'push':
       case 'unshift':
-        inserted = args
+        inserted = args// 如果是push或unshift方法，那么传入参数就是新增的元素
         break
       case 'splice':
-        inserted = args.slice(2)
+        inserted = args.slice(2)// 如果是splice方法，那么传入参数列表中下标为2的就是新增的元素
         break
     }
-    if (inserted) ob.observeArray(inserted)
+    if (inserted) ob.observeArray(inserted)// 调用observe函数将新增的元素转化成响应式
     // notify change
     ob.dep.notify()
     return result

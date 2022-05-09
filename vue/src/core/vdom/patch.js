@@ -101,7 +101,7 @@ export function createPatchFunction (backend) {
     remove.listeners = listeners
     return remove
   }
-  //删除VNode
+  //删除VNode  只需要在要删除节点的父元素上调用removeChild方法即可
   function removeNode (el) {
     const parent = nodeOps.parentNode(el)
     // element may have already been removed due to v-html / v-text
@@ -158,7 +158,7 @@ export function createPatchFunction (backend) {
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
-    if (isDef(tag)) {//创建元素节点
+    if (isDef(tag)) {
       if (process.env.NODE_ENV !== 'production') {
         if (data && data.pre) {
           creatingElmInVPre++
@@ -172,7 +172,7 @@ export function createPatchFunction (backend) {
           )
         }
       }
-
+      //创建元素节点
       vnode.elm = vnode.ns
         ? nodeOps.createElementNS(vnode.ns, tag)
         : nodeOps.createElement(tag, vnode)
@@ -188,21 +188,21 @@ export function createPatchFunction (backend) {
           if (isDef(data)) {
             invokeCreateHooks(vnode, insertedVnodeQueue)
           }
-          insert(parentElm, vnode.elm, refElm)
+          insert(parentElm, vnode.elm, refElm)//插入到DOM中
         }
-        createChildren(vnode, children, insertedVnodeQueue)
+        createChildren(vnode, children, insertedVnodeQueue)//创建元素节点的子节点
         if (appendAsTree) {
           if (isDef(data)) {
             invokeCreateHooks(vnode, insertedVnodeQueue)
           }
-          insert(parentElm, vnode.elm, refElm)
+          insert(parentElm, vnode.elm, refElm)//插入到DOM中
         }
       } else {
-        createChildren(vnode, children, insertedVnodeQueue)
+        createChildren(vnode, children, insertedVnodeQueue)//创建元素节点的子节点
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
-        insert(parentElm, vnode.elm, refElm)
+        insert(parentElm, vnode.elm, refElm)//插入到DOM中
       }
 
       if (process.env.NODE_ENV !== 'production' && data && data.pre) {
@@ -211,8 +211,8 @@ export function createPatchFunction (backend) {
     } else if (isTrue(vnode.isComment)) {//创建注释节点
       vnode.elm = nodeOps.createComment(vnode.text)
       insert(parentElm, vnode.elm, refElm)
-    } else {//创建文本节点
-      vnode.elm = nodeOps.createTextNode(vnode.text)
+    } else {
+      vnode.elm = nodeOps.createTextNode(vnode.text)//创建文本节点
       insert(parentElm, vnode.elm, refElm)
     }
   }
@@ -292,7 +292,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  //创建字节点
+  //创建子节点
   function createChildren (vnode, children, insertedVnodeQueue) {
     if (Array.isArray(children)) {
       if (process.env.NODE_ENV !== 'production') {
